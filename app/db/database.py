@@ -28,6 +28,17 @@ class DatabaseManager():
         conn.commit()
         conn.close()
 
+    def insert_log (self,log:LogEntry) :
+        with sqlite3.connect(self.db_path) as conn:
+            cursor = conn.cursor()
+            log_entry = (str(log.timestamp), log.level.value, log.service, log.message, log.analysis)
+            cursor.execute("INSERT into logs (timestamp, level, service, message, analysis) VALUES (?, ?, ?, ?, ?)",log_entry)
+            conn.commit()
+            log.id = cursor.lastrowid
+        return  log
+
+
+
 
     def get_all_logs(self):
         conn = sqlite3.connect(self.db_path)
@@ -59,3 +70,4 @@ class DatabaseManager():
             )
         conn.close()
         return None
+
