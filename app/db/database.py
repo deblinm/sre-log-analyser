@@ -71,3 +71,11 @@ class DatabaseManager():
         conn.close()
         return None
 
+
+    def update_analysis(self, log_id: int , analysis: str):
+        with sqlite3.connect(self.db_path) as conn:
+            cursor = conn.cursor()
+            log_entry = (analysis, log_id)
+            cursor.execute("UPDATE logs SET analysis = ? WHERE id = ?",
+                           log_entry)
+            conn.commit()
