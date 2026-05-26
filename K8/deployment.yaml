@@ -1,0 +1,45 @@
+#API version and kind
+apiVersion: apps/v1
+kind: Deployment
+
+#Metadata
+
+metadata:
+  name: sre-log-analyser
+
+#Spec
+spec:
+  replicas : 1
+  selector:
+    matchLabels:
+      app: sre-log-analyser
+  template:
+    metadata:
+      labels:
+        app: sre-log-analyser
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/metrics"
+        prometheus.io/port: "8000"
+    spec:
+      containers:
+        - name: sre-log-analyser
+          image: sre-log-analyser:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8000
+          env:
+            - name : OLLAMA_URL
+              value : "http://host.docker.internal:11434"
+          livenessProbe:
+            httpGet:
+              path: /docs
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 15
+          readinessProbe:
+            httpGet:
+              path: /docs
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10
