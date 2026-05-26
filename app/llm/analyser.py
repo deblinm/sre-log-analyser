@@ -1,11 +1,12 @@
 import httpx
 from app.core.models import  LogEntry
+import os
 
 
 class LLMAnalyser:
 
     def __init__(self):
-        self.base_url= "http://localhost:11434"
+        self.base_url= os.environ.get("OLLAMA_URL", "http://localhost:11434")
         self.model="phi3"
 
     def _build_prompt  (self,level, service,message):
