@@ -11,3 +11,7 @@ app.include_router(router)
 @app.get("/metrics")
 def metrics():
     return Response(content=generate_latest(), media_type=CONTENT_TYPE_LATEST)
+
+@app.get("/health")
+def health():
+    return{"status" : "ok" , "service" : "sre-log-analyser"}
